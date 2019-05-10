@@ -1,0 +1,112 @@
+<html>
+  <head> <meta charset="utf-8"/> <title>GHPI dashboard</title> </head>
+  <body>
+    <style type="text/css">
+      table {border:1px dotted black;}
+      td {padding-left:20px;}
+      tr th:nth-child(1) {text-align:left;}
+      tr th:nth-child(2) {text-align:right;}
+      tr th:nth-child(3) {text-align:right;}
+      tr td:nth-child(1) {text-align:right;}
+      tr td:nth-child(2) {text-align:right;}
+      tr td:nth-child(3) {text-align:right;}</style>
+    <h3>Greenhouse sensor readings - <span id="sec">n/a</span></h3>
+    <table style="border:none;">
+      <tr id="wlan0_level"><th>hpi wifi signal level</th><td>n/a</td></tr>
+    </table>
+    <p></p>
+    <p id="statusbar">
+      <span>Data stream:</span>
+      <span id="status">n/a</span>
+    </p>
+    <script src="extlib/mqttws31.min.js"></script>
+    <script src="showdata.js"></script>
+    <div style="float:left;">
+      <table style="background:#fff0f0;white-space:nowrap;">
+	<caption>Temperatures</caption>
+	<tr> <th>Location</th> <th>°C</th> <th style="padding-left:30px;">°F</th> </tr>
+	<tr><th style="text-align:left;border-top:1px dotted black;"
+		colspan="3"><i>Indoor</i></th></tr>
+	<tr id="tmp_ctrl_module"> <th>Control module</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="ceiling"> <th>Ceiling</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="floor_hub"> <th>Floor</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="tank_1"> <th>Tank 1</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="tank_2"> <th>Tank 2</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="tank_3"> <th>Tank 3</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="tank_4"> <th>Tank 4</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="heat_exch_inlet"> <th>Heat exch inlet</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="heat_exch_outlet"> <th>Heat exch outlet</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="delta_exch"> <th>Δ<sub>exch</sub></th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="csp_outlet"> <th>CSP outlet</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="delta_csp"> <th>Δ<sub>CSP</sub></th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="swamp"> <th>Swamp air out</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="aux"> <th>Auxiliary</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr><th style="text-align:left;border-top:1px dotted black;"
+		colspan="3"><i>Outdoor</i></th></tr>
+	<tr id="tmp_outdoor_module"> <th>East wall module</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="fencepost"> <th>Fencepost</th> <td>n/a</td> <td>n/a</td> </tr>
+	<tr id="underground"> <th>Underground</th> <td>n/a</td> <td>n/a</td> </tr>
+      </table>
+      <table style="float:left;margin-top:25px;background:#c0c0c0;white-space:nowrap;">
+	<caption>Electricity</caption>
+	<tr id="Vrms"><th>V<sub>RMS (V)</sub></th><td>n/a</td></tr>
+	<tr id="Irms"><th>I<sub>RMS (A)</sub></th><td>n/a</td></tr>
+	<tr id="Pmean"><th><b>P<sub>mean (W)</sub></b></th>
+	  <td><b>n/a</b></td></tr>
+	<tr id="S"><th>P<sub>apparent</sub> (VA)</th><td>n/a</td></tr>
+	<tr id="PF"><th>Power factor</th><td>n/a</td></tr>
+      </table>
+      <table style="float:left;margin-left:25px;margin-top:25px;background:#f0f0ff;white-space:nowrap;">
+	<caption>Humidity</caption>
+	<tr id="hum_in"><th>Indoor</th><td>n/a</td></tr>
+	<tr id="hum_out"><th>Outdoor</th><td>n/a</td></tr>
+      </table>
+    </div>
+    <div style="float:left;margin-left:25px;"><p></p></div>
+    <div style="float:left;">
+      <div><table style="background:#c0c0c0;white-space:nowrap;">
+	  <caption>Equipment<br><span id="warning"></span></caption>
+	  <tr id="furnace_power"><th>Furnace power</th><td>n/a</td></tr>
+	  <tr id="furnace_ctrl"><th>Furnace control</th><td>n/a</td></tr>
+	  <tr id="furnace_actual"><th>Furnace
+	      <span style="font-size:75%;">(heuristic)</span></th><td>n/a</td></tr>
+	  <tr id="vent_sys"><th>W. vent sys ctrl</th><td>n/a</td></tr>
+	  <tr id="vent"><th>W. vent actual</th><td>n/a</td></tr>
+	  <tr id="swamp_pump"><th>Swamp pump</th><td>n/a</td></tr>
+	  <tr id="vfans"><th>Fans
+	      <span style="font-size:75%;">(heuristic)</span></th><td>n/a</td></tr>
+      </table></div>
+      <div><table style="margin-top:25px;white-space:nowrap;">
+	  <tr><th style="text-align:center;" colspan="3">Heat transfer</th></tr>
+	  <tr id="tflux"><th>Ceiling flux (Wth/m²)</th><td style="padding-left:2px;">n/a</td></tr>
+	  <tr id="tflow"><th><b>Ceiling flow (kWth)</b></th>
+	    <td style="padding-left:2px;"><b>n/a</b></td></tr>
+	  <tr id="heat_exch"><th><b>Exchanger (kWth)</b></th>
+	    <td style="padding-left:2px;"><b>n/a</b></td></tr>
+	  <tr id="csp"><th><b>CSP (kWth)</b></th>
+	    <td style="padding-left:2px;"><b>n/a</b></td></tr>
+	  <tr><th style="padding-top:20px;text-align:center;" colspan="3">Pressure (mbar)</th></tr>
+	  <tr id="plocal"><th>Local</th><td style="padding-left:2px;">n/a</td></tr>
+	  <tr id="psea"><th>Sea level</th><td style="padding-left:2px;">n/a</td></tr>
+	  <tr><th style="padding-top:20px;text-align:center;" colspan="3">Gas</th></tr>
+	  <tr id="gas"><th>Sensor raw (kΩ)</th><td style="padding-left:2px;">n/a</td></tr>
+	</table>
+	<table style="float:left;margin-top:25px;background:#fffff0;white-space:nowrap;">
+	  <caption>Ambient light</caption>
+	  <tr id="lux"><th>Lux</th><td>n/a</td></tr>
+	  <tr id="vis"><th>Visible (W/m²)</th><td>n/a</td></tr>
+	  <tr id="ired"><th>Infrared (W/m²)</th><td>n/a</td></tr>
+	  <tr id="uva"><th>UVA (W/m²)</th><td>n/a</td></tr>
+	  <tr id="uvb"><th>UVB (W/m²)</th><td>n/a</td></tr>
+	  <tr id="l_tot"><th><b>Total (W/m²)</b></th>
+	    <td><b>n/a</b></td></tr>
+	</table>
+      </div>
+    </div>
+
+    <div style="clear:both;"></div>
+    <div style="page-break-after:always;display:block!important;visibility:visible!important;"></div>
+    <br><br>
+
+  </body>
+</html>
