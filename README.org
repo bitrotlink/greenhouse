@@ -1,0 +1,33 @@
+#+TITLE: Greenhouse environmental sensor logging system
+
+* Introduction
+This project provides driver firmware for several sensor chips, a data collection and logging system, and a web-based realtime dashboard.
+
+* Status
+The project is complete and the system is running, and all of the code is in this repository. However, circuit schematics and system documentation are missing, because I foolishly stored them only in my head, except for a couple of subsystems schematics that I drew on a scrap of paper that I'm pretty sure I still have around here somewhere.
+
+* Features
+Entirely from memory, and from skimming my code tonight for the first time in three years after finishing the project:
+- Drivers for the following chips:
+  + DS18B20 temperature sensor driver in westmod.ino, including features not present in any other DS18B20 drivers available:
+    - Ability to reliably differentiate power-on default 85°C temperature readings from real readings of the same value
+    - Fast read of multiple sensors on the same bus via parallel sampling prior to sequential readout
+  + MCP9808 precision temperature sensor
+  + SHT31 temperature and humidity sensor
+  + BME680 temperature, humidity, pressure, and VOC sensor
+  + TSL2591 logarithmic light sensor
+  + VEML6075 UVA and UVB sensor
+  + PHFS_01e thermal flux sensor via MAX11201B ADC
+  + INA260 power monitor
+- SQLite logging
+- Inter-module long distance RS-485 via a custom circuit that I no longer remember, because at the time I was unaware of a COTS chip that does the job — the part number of which I no longer remember either
+- Javascript program to display realtime data taken from the SQLite log
+- Natural gas consumption estimation by monitoring runtime of the furnace
+
+* Purpose
+We needed to monitor gas and electric power consumption of a greenhouse, and correlate that with various indoor temperatures, outdoor air and ground temperatures, insolation, and thermal outflow.
+
+* Caveats
+For the past three years, a single INA260 has been in line with the main power circuit for the entire greenhouse: 20 A, with inductive surges higher. This was a highly questionable design decision by me, yet nary a hiccup. Kudos to TI!
+
+It's New Year's Eve now and I'm really not motivated tonight to continue this brain dump.
